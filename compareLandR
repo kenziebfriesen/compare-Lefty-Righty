@@ -1,0 +1,189 @@
+%% Compare L and R Data
+
+
+%% MEANS and PLOTS
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TrunkFlex)
+plot(MEANL_normOff2FT_TrunkFlex)
+title('normOff2FT_TrunkFlex');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TrunkLatFlex)
+plot(MEANL_normOff2FT_TrunkLatFlex)
+title('normOff2FT_TrunkLatFlex');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TrunkRot)
+plot(MEANL_normOff2FT_TrunkRot)
+title('normOff2FT_TrunkRot');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_POE)
+plot(MEANL_normOff2FT_TA_POE)
+title('normOff2FT_TA_POE');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Elevation)
+plot(MEANL_normOff2FT_TA_Elevation)
+title('normOff2FT_TA_Elevation');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_ElbowFlexion)
+plot(MEANL_normOff2FT_ElbowFlexion)
+title('normOff2FT_ElbowFlexion');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_ElbowValgus)
+plot(MEANL_normOff2FT_ElbowValgus)
+title('normOff2FT_ElbowValgus');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_ElbowProSup)
+plot(MEANL_normOff2FT_ElbowProSup)
+title('normOff2FT_ElbowProSup');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_PelvisAntTilt)
+plot(MEANL_normOff2FT_PelvisAntTilt)
+title('normOff2FT_PelvisAntTilt');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_PelvisLatTilt)
+plot(MEANL_normOff2FT_PelvisLatTilt)
+title('normOff2FT_PelvisLatTilt');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_PelvisRot)
+plot(MEANL_normOff2FT_PelvisRot)
+title('normOff2FT_PelvisRot');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_P_KneeFlexion)
+plot(MEANL_normOff2FT_P_KneeFlexion)
+title('normOff2FT_P_KneeFlexion');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_S_KneeFlexion)
+plot(MEANL_normOff2FT_S_KneeFlexion)
+title('normOff2FT_S_KneeFlexion');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_P_HipFlexion)
+plot(MEANL_normOff2FT_P_HipFlexion)
+title('normOff2FT_P_HipFlexion');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_S_HipFlexion)
+plot(MEANL_normOff2FT_S_HipFlexion)
+title('normOff2FT_S_HipFlexion');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_P_HipAbduction)
+plot(MEANL_normOff2FT_P_HipAbduction)
+title('normOff2FT_P_HipAbduction');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_S_HipAbduction)
+plot(MEANL_normOff2FT_S_HipAbduction)
+title('normOff2FT_S_HipAbduction');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_P_HipRot)
+plot(MEANL_normOff2FT_P_HipRot)
+title('normOff2FT_P_HipRot');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_S_HipRot)
+plot(MEANL_normOff2FT_S_HipRot)
+title('normOff2FT_S_HipRot');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Shoulder_Force_CD)
+plot(MEANL_normOff2FT_TA_Shoulder_Force_CD)
+title('normOff2FT_TA_Shoulder_Force_CD');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Shoulder_Force_X)
+plot(MEANL_normOff2FT_TA_Shoulder_Force_X)
+title('normOff2FT_TA_Shoulder_Force_X');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Shoulder_Force_Y)
+plot(MEANL_normOff2FT_TA_Shoulder_Force_Y)
+title('normOff2FT_TA_Shoulder_Force_Y');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Shoulder_Force_Z)
+plot(MEANL_normOff2FT_TA_Shoulder_Force_Z)
+title('normOff2FT_TA_Shoulder_Force_Z');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Shoulder_Force_Net)
+plot(MEANL_normOff2FT_TA_Shoulder_Force_Net)
+title('normOff2FT_TA_Shoulder_Force_Net');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Elbow_Force_X)
+plot(MEANL_normOff2FT_TA_Elbow_Force_X)
+title('normOff2FT_TA_Elbow_Force_X');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Elbow_Force_Y)
+plot(MEANL_normOff2FT_TA_Elbow_Force_Y)
+title('normOff2FT_TA_Elbow_Force_Y');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Elbow_Force_Z)
+plot(MEANL_normOff2FT_TA_Elbow_Force_Z)
+title('normOff2FT_TA_Elbow_Force_Z');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Elbow_Force_Net)
+plot(MEANL_normOff2FT_TA_Elbow_Force_Net)
+title('normOff2FT_TA_Elbow_Force_Net');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Shoulder_Moment_CD)
+plot(MEANL_normOff2FT_TA_Shoulder_Moment_CD)
+title('normOff2FT_TA_Shoulder_Moment_CD');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Shoulder_Moment_X)
+plot(MEANL_normOff2FT_TA_Shoulder_Moment_X)
+title('normOff2FT_TA_Shoulder_Moment_X');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Shoulder_Moment_Y)
+plot(MEANL_normOff2FT_TA_Shoulder_Moment_Y)
+title('normOff2FT_TA_Shoulder_Moment_Y');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Shoulder_Moment_Z)
+plot(MEANL_normOff2FT_TA_Shoulder_Moment_Z)
+title('normOff2FT_TA_Shoulder_Moment_Z');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Shoulder_Moment_Net)
+plot(MEANL_normOff2FT_TA_Shoulder_Moment_Net)
+title('normOff2FT_TA_Shoulder_Moment_Net');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Elbow_Moment_X)
+plot(MEANL_normOff2FT_TA_Elbow_Moment_X)
+title('normOff2FT_TA_Elbow_Moment_X');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Elbow_Moment_Y)
+plot(MEANL_normOff2FT_TA_Elbow_Moment_Y)
+title('normOff2FT_TA_Elbow_Moment_Y');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Elbow_Moment_Z)
+plot(MEANL_normOff2FT_TA_Elbow_Moment_Z)
+title('normOff2FT_TA_Elbow_Moment_Z');
+
+figure('Color','w'); hold on;
+plot(MEANR_normOff2FT_TA_Elbow_Moment_Net)
+plot(MEANL_normOff2FT_TA_Elbow_Moment_Net)
+title('normOff2FT_TA_Elbow_Moment_Net');
