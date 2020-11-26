@@ -1,0 +1,293 @@
+%% Compare L and R Data: righty 
+
+% Author: Kenzie Friesen
+% Date: August 3, 2020
+% Purpose: To verify that there are 5 EMs and that FT is 24 frames after BR
+
+clear all; clc;
+Data = dir('*.txt'); %Read in data
+numFiles = length(Data); %Find number of data files
+fileMaster = char({Data.name}); %Find order of output
+
+
+% Number of events
+numEvents = 5; %number of events
+
+% Create masters
+master = []; %Creating master array for final output excel spreadsheet
+masterDem = [];
+normWholemaster = [];
+normPropmaster = [];
+normFC2BRmaster = [];
+normFC2FTmaster = [];
+normOff2Contmaster = [];
+normPropmaster_GRFx = [];
+normPropmaster_GRFy = [];
+normPropmaster_GRFz = [];
+normPropmaster_GRFnet = [];
+
+f = 1; %file
+p = 1; %participant
+rowHold = numEvents + 1; %creating a rows of space
+numParticipants = (numFiles)/3; % numParticipants based on how many files are in current folder divided by number of files per participant
+j = 1;
+d = 1;
+w = 1;
+pem = 1;
+
+
+%%%%
+
+for f = 1:numFiles
+     filename = fileMaster(f, :); %Retrieves whole (:) file name for which you are working on
+     opts = detectImportOptions(filename);
+     opts.DataLines = [7,8];
+     opts.ExtraColumnsRule = "ignore";
+     opts.EmptyLineRule = "skip";
+     dem = readtable(filename, opts);
+     dem = table2array(dem);
+     masterDem(f, 1) = dem(1,1);
+     masterDem(f, 2) = dem(2,1);
+     clear opts
+     currentTrial = readtable(filename);
+     [rowsTrial, columnsTrial] = size(currentTrial); %Finds the  # of rows, columns in the trial we are working on "currentTrial"
+     currentTrial = currentTrial(12:rowsTrial, 1:71); %We will only be using rows from 8 down and all columns 
+     [rowsTrial, columnsTrial] = size(currentTrial); %Re-sizes the currentTrial based on the row above specifications
+    
+% Needed to find events
+      rowNum = 1; %A coutner used to let us know where we are in the matrix
+      variableData = zeros(rowHold, 71); %It is a temporary matrix for each event. Adds zeros to the matrix "variableData"
+      i = 1; %Counter variable for the next while statement
+      currentTrial = table2array(currentTrial);
+  
+%Find events
+ while i < rowsTrial %repeat for every row of data
+                if currentTrial(i, 71) == 1 %Using 3 bc thats the # of columns we have 
+                    variableData(rowNum, :) = currentTrial(i, :); %Creating variableData using all rows of our datasheet (correctedEMG)
+                    rowNum = rowNum + 1; %repeat for the next row
+                    i = i + 1; 
+                end
+                if currentTrial(i, 71) ~= 1 %if correctedEMG doesn't equal 1
+                    i = i + 1; %just move onto the next row of data
+                end
+ end
+
+
+ %Place EM data into a master to contain each participants data
+ master(j:(j+5),2:72) = variableData(:,:);
+ master(j:j+5) = f;
+ 
+ % Shift subsequent events into next columns
+ masterEM(p,1:72) = master(pem,1:72);
+ masterEM(p,73:144) = master(pem+1,1:72);
+ masterEM(p,145:216) = master(pem+2,1:72);
+ masterEM(p,217:288) = master(pem+3,1:72);
+ masterEM(p,289:360) = master(pem+4,1:72);
+
+%% Add normed variables to end of currentTrial
+KineticsNorm = currentTrial(:,44:52)./(masterDem(f,1)*9.807);
+KineticsNorm2 = currentTrial(:,53:61)./((masterDem(f,1)*9.807)*masterDem(f,2));
+GRFNorm = currentTrial(:,67:70)./masterDem(f,1)*9,807;
+GRFNorm = (GRFNorm*(-1));
+KineticsNorm = array2table(KineticsNorm,'VariableNames',{'TA_Shoulder_Force_CD_normBW','TA_Shoulder_Force_X_normBW','TA_Shoulder_Force_Y_normBW','TA_Shoulder_Force_Z_normBW','TA_Shoulder_Force_Net_normBW','TA_Elbow_Force_Z_normBW','TA_Elbow_Force_Y_normBW','TA_Elbow_Force_X_normBW','TA_Elbow_Force_Net_normBW'});
+KineticsNorm2 = array2table(KineticsNorm2, 'VariableNames', {'TA_Shoulder_Moment_X_normBWH','TA_Shoulder_Moment_Y_normBWH','TA_Shoulder_Moment_Z_normBWH','TA_Shoulder_Moment_CD_normBWH','TA_Shoulder_Moment_Net_normBWH','TA_Elbow_Moment_X_normBWH','TA_Elbow_Moment_Y_normBWH','TA_Elbow_Moment_Z_normBWH','TA_Elbow_Moment_Net_normBWH'});
+GRFNorm = array2table(GRFNorm, 'VariableNames',{'GRFx_normBW','GRFy_normBW','GRFz_normBW','GRFnet_normBW'});
+currentTrial = array2table(currentTrial, 'VariableNames', {'Sample #','Biceps_RawVoltage','Deltoid_RawVoltage','SA_RawVoltage','PecMaj_RawVoltage','SGMed_RawVoltage','SGMax_RawVoltage','PGMed_RawVoltage','PGMax_RawVoltage','TrunkFlexion','TrunkLateralFlexion','TrunkRotation','TA_PlaneOfElev','TA_Elevation','TA_AxialRotation','TA_ElbowFlexion','TA_ElbowValgus','TA_ElbowPronationSupination','GA_PlaneOfElev','GA_Elevation','GA_AxialRotation','GA_ElbowFlexion','GA_ElbowValgus','GA_ElbowPronationSupination','PelvicAnteriorTilt','PelvicLateralTilt','PelvicRotation','P_KneeFlexion','S_KneeFlexion','P_HipFlexion','S_HipFlexion','P_HipAbduction','S_HipAbduction','P_HipRotation','S_HipRotation','P_neutralHipFlexion','S_neutralHipFlexion','P_neutralHipAbduction','S_neutralHipAbduction','P_neutralHipRotation','S_neutralHipRotation','TA_NeutralElbowValgus','GA_NeutralElbowValgus', 'TA_Shoulder_Force_CD','TA_Shoulder_Force_X','TA_Shoulder_Force_Y','TA_Shoulder_Force_Z','TA_Shoulder_Force_Net','TA_Elbow_Force_X','TA_Elbow_Force_Y','TA_Elbow_Force_Z','TA_Elbow_Force_Net','TA_Shoulder_Moment_CD','TA_Shoulder_Moment_X','TA_Shoulder_Moment_Y','TA_Shoulder_Moment_Z','TA_Shoulder_Moment_Net','TA_Elbow_Moment_X','TA_Elbow_Moment_Y','TA_Elbow_Moment_Z','TA_Elbow_Moment_Net','Sacrum_Ang_Vel','Thorax_Ang_Vel','TA_UpperArm_Ang_Vel','TA_Forearm_Ang_Vel','TA_Hand_Ang_Vel','GRFx','GRFy','GRFz','GRFnet','VirtualEventMark'});
+BMnormData = [currentTrial KineticsNorm KineticsNorm2 GRFNorm];
+clear KineticsNorm KineticsNorm2 GRFNorm
+BMnormData = table2array(BMnormData);
+
+%% Normalize data to 100 points using created NORM functions (see "normalize data between events" repository)
+%Whole pitch
+[WholePitchNorm] = whole_norm100(BMnormData(:,71),BMnormData);
+%Propulsion
+[PropPitchNorm] = prop_norm100(BMnormData(:,71),BMnormData);
+%FootOff to Foot Contact
+[Off2ContPitchNorm] = off2cont_norm100(BMnormData(:,71),BMnormData);
+%Foot Contact to Ball Release
+[FC2BRPitchNorm] = fc2br_norm100(BMnormData(:,71),BMnormData);
+%Foot Contact to FollowThrough
+[EventsCurrentTrial, FC2FTPitchNorm] = fc2ft_norm100(BMnormData(:,71),BMnormData);
+%Foot Off to Follot Through
+[Off2FTPitchNorm] = off2ft_norm100(BMnormData(:,71),BMnormData);
+
+ 
+%Place GRF into PropPitchNorm masters
+normWholemaster_GRFx(:,w) = PropPitchNorm(:,90);
+normWholemaster_GRFy(:,w) = PropPitchNorm(:,91);
+normWholemaster_GRFz(:,w) = PropPitchNorm(:,92);
+normWholemaster_GRFnet(:,w) = PropPitchNorm(:,93);
+
+%Place Variables into FC2FT masters (variable names are from original data set: softball pitch data)
+normFC2FT_TrunkFlex(:,w) = FC2FTPitchNorm(:,10);
+normFC2FT_TrunkLatFlex(:,w) = FC2FTPitchNorm(:,11);
+normFC2FT_TrunkRot(:,w) = FC2FTPitchNorm(:,12);
+normFC2FT_TA_POE(:,w) = FC2FTPitchNorm(:,13);
+normFC2FT_TA_Elevation(:,w) = FC2FTPitchNorm(:,14);
+normFC2FT_ElbowFlexion(:,w) = FC2FTPitchNorm(:,16);
+normFC2FT_ElbowValgus(:,w) = FC2FTPitchNorm(:,17);
+normFC2FT_ElbowProSup(:,w) = FC2FTPitchNorm(:,18);
+normFC2FT_PelvisAntTilt(:,w) = FC2FTPitchNorm(:,25);
+normFC2FT_PelvisLatTilt(:,w) = FC2FTPitchNorm(:,26);
+normFC2FT_PelvisRot(:,w) = FC2FTPitchNorm(:,27);
+normFC2FT_P_KneeFlexion(:,w) = FC2FTPitchNorm(:,28);
+normFC2FT_S_KneeFlexion(:,w) = FC2FTPitchNorm(:,29);
+normFC2FT_P_HipFlexion(:,w) = FC2FTPitchNorm(:,30);
+normFC2FT_S_HipFlexion(:,w) = FC2FTPitchNorm(:,31);
+normFC2FT_P_HipAbduction(:,w) = FC2FTPitchNorm(:,32);
+normFC2FT_S_HipAbduction(:,w) = FC2FTPitchNorm(:,33);
+normFC2FT_P_HipRot(:,w) = FC2FTPitchNorm(:,34);
+normFC2FT_S_HipRot(:,w) = FC2FTPitchNorm(:,35);
+normFC2FT_TA_Shoulder_Force_CD(:,w) = FC2FTPitchNorm(:,72);%44
+normFC2FT_TA_Shoulder_Force_X(:,w) = FC2FTPitchNorm(:,73);
+normFC2FT_TA_Shoulder_Force_Y(:,w) = FC2FTPitchNorm(:,74);
+normFC2FT_TA_Shoulder_Force_Z(:,w) = FC2FTPitchNorm(:,75);
+normFC2FT_TA_Shoulder_Force_Net(:,w) = FC2FTPitchNorm(:,76);
+normFC2FT_TA_Elbow_Force_Z(:,w) = FC2FTPitchNorm(:,77);
+normFC2FT_TA_Elbow_Force_Y(:,w) = FC2FTPitchNorm(:,78);
+normFC2FT_TA_Elbow_Force_X(:,w) = FC2FTPitchNorm(:,79);
+normFC2FT_TA_Elbow_Force_Net(:,w) = FC2FTPitchNorm(:,80);
+normFC2FT_TA_Shoulder_Moment_X(:,w) = FC2FTPitchNorm(:,81);
+normFC2FT_TA_Shoulder_Moment_Y(:,w) = FC2FTPitchNorm(:,82);
+normFC2FT_TA_Shoulder_Moment_Z(:,w) = FC2FTPitchNorm(:,83);
+normFC2FT_TA_Shoulder_Moment_CD(:,w) = FC2FTPitchNorm(:,84);
+normFC2FT_TA_Shoulder_Moment_Net(:,w) = FC2FTPitchNorm(:,85);
+normFC2FT_TA_Elbow_Moment_X(:,w) = FC2FTPitchNorm(:,86);
+normFC2FT_TA_Elbow_Moment_Y(:,w) = FC2FTPitchNorm(:,87);
+normFC2FT_TA_Elbow_Moment_Z(:,w) = FC2FTPitchNorm(:,88);
+normFC2FT_TA_Elbow_Moment_Net(:,w) = FC2FTPitchNorm(:,89);
+
+ j = j + 6;
+ f = f + 1; %Repeat for the next file
+ w = w + 1;
+ p = p + 1;
+ pem = pem+6;
+
+end
+
+
+%% MEANS and PLOTS
+MEANR_normWholemaster_GRFx = nanmean(normWholemaster_GRFx,2);
+plot(MEANR_normWholemaster_GRFx)
+
+MEANR_normWholemaster_GRFy = nanmean(normWholemaster_GRFy,2);
+plot(MEANR_normWholemaster_GRFy)
+
+MEANR_normWholemaster_GRFz = nanmean(normWholemaster_GRFz,2);
+plot(MEANR_normWholemaster_GRFz)
+
+MEANR_normWholemaster_GRFnet = nanmean(normWholemaster_GRFnet,2);
+plot(MEANR_normWholemaster_GRFnet)
+
+MEANR_normOff2FT_TrunkFlex = nanmean(normOff2FT_TrunkFlex,2);
+plot(MEANR_normOff2FT_TrunkFlex)
+
+MEANR_normOff2FT_TrunkLatFlex = nanmean(normOff2FT_TrunkLatFlex,2);
+plot(MEANR_normOff2FT_TrunkLatFlex)
+
+MEANR_normOff2FT_TrunkRot = nanmean(normOff2FT_TrunkRot,2);
+plot(MEANR_normOff2FT_TrunkRot)
+
+MEANR_normOff2FT_TA_POE = nanmean(normOff2FT_TA_POE,2);
+plot(MEANR_normOff2FT_TA_POE)
+
+MEANR_normOff2FT_TA_Elevation = nanmean(normOff2FT_TA_Elevation,2);
+plot(MEANR_normOff2FT_TA_Elevation)
+
+MEANR_normOff2FT_ElbowFlexion = nanmean(normOff2FT_ElbowFlexion,2);
+plot(MEANR_normOff2FT_ElbowFlexion)
+
+MEANR_normOff2FT_ElbowValgus = nanmean(normOff2FT_ElbowValgus,2);
+plot(MEANR_normOff2FT_ElbowValgus)
+
+MEANR_normOff2FT_ElbowProSup = nanmean(normOff2FT_ElbowProSup,2);
+plot(MEANR_normOff2FT_ElbowProSup)
+
+MEANR_normOff2FT_PelvisAntTilt = nanmean(normOff2FT_PelvisAntTilt,2);
+plot(MEANR_normOff2FT_PelvisAntTilt)
+
+MEANR_normOff2FT_PelvisLatTilt = nanmean(normOff2FT_PelvisLatTilt,2);
+plot(MEANR_normOff2FT_PelvisLatTilt)
+
+MEANR_normOff2FT_PelvisRot = nanmean(normOff2FT_PelvisRot,2);
+plot(MEANR_normOff2FT_PelvisRot)
+
+MEANR_normOff2FT_P_KneeFlexion = nanmean(normOff2FT_P_KneeFlexion,2);
+plot(MEANR_normOff2FT_P_KneeFlexion)
+
+MEANR_normOff2FT_S_KneeFlexion = nanmean(normOff2FT_S_KneeFlexion,2);
+plot(MEANR_normOff2FT_S_KneeFlexion)
+
+MEANR_normOff2FT_P_HipFlexion = nanmean(normOff2FT_P_HipFlexion,2);
+plot(MEANR_normOff2FT_P_HipFlexion)
+
+MEANR_normOff2FT_S_HipFlexion = nanmean(normOff2FT_S_HipFlexion,2);
+plot(MEANR_normOff2FT_S_HipFlexion)
+
+MEANR_normOff2FT_P_HipAbduction = nanmean(normOff2FT_P_HipAbduction,2);
+plot(MEANR_normOff2FT_P_HipAbduction)
+
+MEANR_normOff2FT_S_HipAbduction = nanmean(normOff2FT_S_HipAbduction,2);
+plot(MEANR_normOff2FT_S_HipAbduction)
+
+MEANR_normOff2FT_P_HipRot = nanmean(normOff2FT_P_HipRot,2);
+plot(MEANR_normOff2FT_P_HipRot)
+
+MEANR_normOff2FT_S_HipRot = nanmean(normOff2FT_S_HipRot,2);
+plot(MEANR_normOff2FT_S_HipRot)
+
+MEANR_normOff2FT_TA_Shoulder_Force_CD = nanmean(normOff2FT_TA_Shoulder_Force_CD,2);
+plot(MEANR_normOff2FT_TA_Shoulder_Force_CD)
+
+MEANR_normOff2FT_TA_Shoulder_Force_X = nanmean(normOff2FT_TA_Shoulder_Force_X,2);
+plot(MEANR_normOff2FT_TA_Shoulder_Force_X)
+
+MEANR_normOff2FT_TA_Shoulder_Force_Y = nanmean(normOff2FT_TA_Shoulder_Force_Y,2);
+plot(MEANR_normOff2FT_TA_Shoulder_Force_Y)
+
+MEANR_normOff2FT_TA_Shoulder_Force_Z = nanmean(normOff2FT_TA_Shoulder_Force_Z,2);
+plot(MEANR_normOff2FT_TA_Shoulder_Force_Z)
+
+MEANR_normOff2FT_TA_Shoulder_Force_Net = nanmean(normOff2FT_TA_Shoulder_Force_Net,2);
+plot(MEANR_normOff2FT_TA_Shoulder_Force_Net)
+
+MEANR_normOff2FT_TA_Elbow_Force_X = nanmean(normOff2FT_TA_Elbow_Force_X,2);
+plot(MEANR_normOff2FT_TA_Elbow_Force_X)
+
+MEANR_normOff2FT_TA_Elbow_Force_Y = nanmean(normOff2FT_TA_Elbow_Force_Y,2);
+plot(MEANR_normOff2FT_TA_Elbow_Force_Y)
+
+MEANR_normOff2FT_TA_Elbow_Force_Z = nanmean(normOff2FT_TA_Elbow_Force_Z,2);
+plot(MEANR_normOff2FT_TA_Elbow_Force_Z)
+
+MEANR_normOff2FT_TA_Elbow_Force_Net = nanmean(normOff2FT_TA_Elbow_Force_Net,2);
+plot(MEANR_normOff2FT_TA_Elbow_Force_Net)
+
+MEANR_normOff2FT_TA_Shoulder_Moment_CD = nanmean(normOff2FT_TA_Shoulder_Moment_CD,2);
+plot(MEANR_normOff2FT_TA_Shoulder_Moment_CD)
+
+MEANR_normOff2FT_TA_Shoulder_Moment_X = nanmean(normOff2FT_TA_Shoulder_Moment_X,2);
+plot(MEANR_normOff2FT_TA_Shoulder_Moment_X)
+
+MEANR_normOff2FT_TA_Shoulder_Moment_Y = nanmean(normOff2FT_TA_Shoulder_Moment_Y,2);
+plot(MEANR_normOff2FT_TA_Shoulder_Moment_Y)
+
+MEANR_normOff2FT_TA_Shoulder_Moment_Z = nanmean(normOff2FT_TA_Shoulder_Moment_Z,2);
+plot(MEANR_normOff2FT_TA_Shoulder_Moment_Z)
+
+MEANR_normOff2FT_TA_Shoulder_Moment_Net = nanmean(normOff2FT_TA_Shoulder_Moment_Net,2);
+plot(MEANR_normOff2FT_TA_Shoulder_Moment_Net)
+
+MEANR_normOff2FT_TA_Elbow_Moment_X = nanmean(normOff2FT_TA_Elbow_Moment_X,2);
+plot(MEANR_normOff2FT_TA_Elbow_Moment_X)
+
+MEANR_normOff2FT_TA_Elbow_Moment_Y = nanmean(normOff2FT_TA_Elbow_Moment_Y,2);
+plot(MEANR_normOff2FT_TA_Elbow_Moment_Y)
+
+MEANR_normOff2FT_TA_Elbow_Moment_Z = nanmean(normOff2FT_TA_Elbow_Moment_Z,2);
+plot(MEANR_normOff2FT_TA_Elbow_Moment_Z)
+
+MEANR_normOff2FT_TA_Elbow_Moment_Net = nanmean(normOff2FT_TA_Elbow_Moment_Net,2);
+plot(MEANR_normOff2FT_TA_Elbow_Moment_Net)
+
+save('RightyAverages.mat')
